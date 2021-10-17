@@ -1,0 +1,86 @@
+﻿@page "/{year}/{month}/{day}"
+@model DayModel
+@{
+    ViewData["Title"] = new DateTime(Model.Year, Model.Month, Model.Day).ToString("D");
+}
+
+<div class="d-flex justify-content-between h4 m-0 mb-4">
+	@{
+		var lastDay = new DateTime(Model.Year, Model.Month, Model.Day).AddDays(-1);
+		var nextDay = new DateTime(Model.Year, Model.Month, Model.Day).AddDays(1);
+		<a class="d-flex flex-row align-items-center gap-2 text-decoration-none highlight" href="/@lastDay.Year/@lastDay.Month/@lastDay.Day">
+			<i class="fa-solid fa-angle-left mt-1"></i>
+			@lastDay.ToString("dddd dd")
+		</a>
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb mb-1">
+				<li class="breadcrumb-item">
+					<a href="/@Model.Year/" class="text-decoration-none highlight">
+						@Model.Year
+					</a>
+				</li>
+				<li class="breadcrumb-item">
+					<a href="/@Model.Year/@Model.Month" class="text-decoration-none highlight">
+						@(new DateTime(Model.Year, Model.Month, 1).ToString("MMMM"))
+					</a>
+				</li>
+				<li class="breadcrumb-item active" aria-current="page">
+					@(new DateTime(Model.Year, Model.Month, Model.Day).ToString("dddd dd"))
+				</li>
+			</ol>
+		</nav>
+		<a class="d-flex flex-row align-items-center gap-2 text-decoration-none highlight" href="/@nextDay.Year/@nextDay.Month/@nextDay.Day">
+			@nextDay.ToString("dddd dd")
+			<i class="fa-solid fa-angle-right mt-1"></i>
+		</a>
+	}
+</div>
+
+
+@if (Model.IsLocked)
+{
+    <div class="text-center fs-1 highlight mt-5">
+		<i class="fa-solid fa-lock"></i>
+	</div>
+    <div class="text-center fs-3 highlight">
+		Come back later
+	</div>
+}
+else if (Model.FileExtension == ".png"
+		 || Model.FileExtension == ".jpg"
+		 || Model.FileExtension == ".jpeg"
+		 || Model.FileExtension == ".gif")
+{
+	<div class="container d-flex justify-content-center flex-grow-0">
+		<img src="@($"/_content/{Model.Year}/{Model.Month:D2}/{Model.Day:D2}{Model.FileExtension}")" style="min-height: 600px; height: calc(100vh - 200px);" />
+	</div>
+}
+else if (Model.FileExtension == ".mp4")
+{
+	<div class="container d-flex justify-content-center flex-grow-0">
+		<video controls="" src="@($"/_content/{Model.Year}/{Model.Month:D2}/{Model.Day:D2}{Model.FileExtension}")" autoplay="" style="min-height: 600px; height: calc(100vh - 200px);"></video>
+	</div>
+}
+else if(Model.FileExtension == null)
+{
+    <div class="text-center fs-1 highlight mt-5">
+		:(
+	</div>
+    <div class="text-center fs-3">
+		We don't have anything to show today - sorry!
+	</div>
+}
+else
+{
+    <div class="text-center fs-1 highlight mt-5">
+		<i class="fa-solid fa-question"></i>
+	</div>
+    <div class="text-center fs-3">
+		We're not sure how to show this file
+	</div>
+    <div class="text-center fs-5">
+		<a class="highlight text-decoration-none" href="@($"/_content/{Model.Year}/{Model.Month:D2}/{Model.Day:D2}{Model.FileExtension}")">
+			Go directly to file
+		</a>
+	</div>
+}

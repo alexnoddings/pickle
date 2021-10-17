@@ -1,0 +1,40 @@
+﻿@page "/{year}"
+@model Pickle.Pages.YearModel
+@{
+	ViewData["Title"] = Model.Year.ToString();
+}
+
+<div class="d-flex justify-content-between h4 m-0">
+	<a class="d-flex flex-row align-items-center gap-2 text-decoration-none highlight" href="/@(Model.Year - 1)/">
+		<i class="fa-solid fa-angle-left mt-1"></i>
+		@(Model.Year - 1)
+	</a>
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb mb-1">
+			<li class="breadcrumb-item active" aria-current="page">
+				@Model.Year
+			</li>
+		</ol>
+	</nav>
+	<a class="d-flex flex-row align-items-center gap-2 text-decoration-none highlight" href="/@(Model.Year + 1)/">
+		@(Model.Year + 1)
+		<i class="fa-solid fa-angle-right mt-1"></i>
+	</a>
+</div>
+
+<div class="row my-4 px-1">
+	@for (int i = 1; i <= 12; i++)
+	{
+		var now = DateTime.Now.Date;
+		var month = new DateTime(Model.Year, i, 1);
+		<div class="col-6 col-sm-4 col-md-3 col-lg-2 p-2">
+			<a class="text-decoration-none highlight" href="/@Model.Year/@i">
+				<div class="card">
+					<div class="card-body h5 mb-0 @(month > now ? "text-muted" : "")">
+						@(month.ToString("MMMM"))
+					</div>
+				</div>
+			</a>
+		</div>
+	}
+</div>
